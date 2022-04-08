@@ -4,7 +4,7 @@ DEBUG = True
 
 SECRET_KEY = "thisisthesecretkeyforlocaldevwhichisntthatsecretactually"
 
-ALLOWED_HOSTS = ["localhost", ]
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", ]
 
 DATABASES = {
     'default': {

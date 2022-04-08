@@ -30,6 +30,4 @@ COPY requirements.txt requirements.txt
 COPY requirements-dev.txt requirements-dev.txt
 RUN pip-sync requirements.txt requirements-dev.txt
 
-RUN createdb mo2info
-
-ENTRYPOINT python manage.py runserver 0.0.0.0:8000
+ENTRYPOINT python manage.py migrate && python manage.py runserver 0.0.0.0:8000

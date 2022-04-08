@@ -21,7 +21,7 @@ from mo2info.main.views import BowDamageTrialCreateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path(
-        'mo2/bow-damage/contribute/',
+        'bow-damage/contribute/',
         BowDamageTrialCreateView.as_view(),
         name="bow-damage-create"
     ),
