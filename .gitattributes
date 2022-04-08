@@ -1,1 +1,2 @@
 dev export-ignore
+.pgpass export-ignore
