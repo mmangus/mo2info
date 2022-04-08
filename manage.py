@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 import sys
-
+from mo2info.set_environment import set_environment
 
 def main():
     """Run administrative tasks."""
+
+    set_environment()
 
     try:
         from django.core.management import execute_from_command_line
