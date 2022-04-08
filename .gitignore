@@ -132,7 +132,7 @@ dev/postgres-data
 .idea
 
 # Elastic Beanstalk Files
-dev/.elasticbeanstalk/*
+.elasticbeanstalk/*
 dev/aws-elastic-beanstalk-cli-setup
-!dev/.elasticbeanstalk/*.cfg.yml
-!dev/.elasticbeanstalk/*.global.yml
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

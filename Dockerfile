@@ -21,8 +21,7 @@ RUN apt-get install -y postgresql-14
 RUN pip3 install --upgrade pip
 RUN pip3 install pip-tools
 
-# even though we have a volume, we want to bust cache if this changes
-COPY requirements.txt requirements.txt
+COPY . /mo2info
 RUN pip-sync
 
 RUN python manage.py migrate
