@@ -4,7 +4,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["michaelmang.us", ]
+ALLOWED_HOSTS = [".mo2.info", ]
 
 DATABASES = {
     'default': {
