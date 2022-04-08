@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <title>MO2 Bow Damage Data Collection</title>
+        <style>
+            .helptext {
+                font-size: 10pt;
+                color: #444;
+            }
+            label, input {
+                display: flex;
+                flex-direction: column;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Bow Damage Model Training</h2>
+        The goal of this tool is to build a model that can tell you how much
+        damage a bow will do (on average to a target dummy) based on its
+        attributes. But first, gotta collect the raw data. You can help by
+        following this procedure:
+        <ol>
+            <li>
+                Make sure your Archery skill is trained to 100.
+            </li>
+            <li>
+                Input your bow's type, range, current durability, and maximum
+                durability below.
+            </li>
+            <li>
+                Find a target dummy in town and stand about 1 horse length
+                away.
+                <ul>
+                    <li>
+                        In initial testing, distance from target had minimal
+                        (no?) effect on damage, at least at moderate distances,
+                        so it's probably not important that you do this
+                        precisely as long as you are close enough to reliably
+                        hit the dummy in the head.
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Shoot 10 fully-charged arrows into the head of the target
+                dummy.
+                <ul>
+                    <li>
+                        Use broadhead arrows for short or asymmetric bows and
+                        longbow arrows with longbows.
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Check your combat log, add up the total amount of damage you
+                did, then divide by 10 to find your mean damage per shot.
+            </li>
+        </ol>
+        <form action="{% url 'bow-damage-create' %}" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit" />
+        </form>
+    </body>
+</html>

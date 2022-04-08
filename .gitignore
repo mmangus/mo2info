@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+dev/postgres-data
+.idea
+
+# Elastic Beanstalk Files
+dev/.elasticbeanstalk/*
+dev/aws-elastic-beanstalk-cli-setup
+!dev/.elasticbeanstalk/*.cfg.yml
+!dev/.elasticbeanstalk/*.global.yml
