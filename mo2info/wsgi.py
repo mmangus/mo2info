@@ -7,18 +7,13 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.0/howto/deployment/wsgi/
 """
 
-import json
 import os
-import subprocess
 
 from django.core.wsgi import get_wsgi_application
 
-eb_env = json.loads(
-    subprocess.run(
-        "/opt/elasticbeanstalk/bin/get-config environment"
-    ).stdout
+os.environ.setdefault(
+    'DJANGO_SETTINGS_MODULE',
+    'mo2info.settings.production'
 )
-for key, value in eb_env.items():
-    os.environ.setdefault(key, value)
 
 application = get_wsgi_application()
