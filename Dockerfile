@@ -26,4 +26,4 @@ RUN pip-sync
 
 RUN python manage.py migrate
 
-ENTRYPOINT gunicorn --bind :8000 --workers 5 portfolio.wsgi:application
+ENTRYPOINT gunicorn --bind :8000 --workers 5 mo2info.wsgi:application
