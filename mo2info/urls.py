@@ -26,13 +26,13 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", HomeView.as_view(), name="home"),
     path(
-        "bow-damage/contribute/",
-        BowDamageTrialCreateView.as_view(),
-        name="bow-damage-contribute",
-    ),
-    path(
         "bow-damage/",
         BowDamagePredictorSummaryView.as_view(),
         name="bow-damage-summary",
+    ),
+    path(
+        "bow-damage/contribute/",
+        BowDamageTrialCreateView.as_view(),
+        name="bow-damage-contribute",
     ),
 ]
