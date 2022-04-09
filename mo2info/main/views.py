@@ -7,11 +7,13 @@ class BowDamageTrialCreateView(CreateView):
     model = BowDamageTrial
     fields = [
         "bow_type",
-        "range",
         "durability_current",
         "durability_max",
+        "range",
         "damage_log",
     ]
 
     def get_success_url(self) -> str:
         return reverse('bow-damage-create')
+
+
