@@ -54,6 +54,15 @@
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Submit" />
+            <script>
+                // quick hack for easier mobile entry w/o bothering w/ Django
+                //  form widget abstraction
+                document.getElementById(
+                    "id_damage_log"
+                ).setAttribute(
+                    "inputmode", "numeric"
+                )
+            </script>
         </form>
     </body>
 </html>
