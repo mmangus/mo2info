@@ -1,5 +1,10 @@
+import csv
+import json
+
+from django.core import serializers
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, ListView, TemplateView
 
 from .models import BowDamagePredictor, BowDamageTrial
 
@@ -31,3 +36,24 @@ class BowDamagePredictorSummaryView(TemplateView):
         for predictor in BowDamagePredictor.objects.all():
             context["summaries"].append((str(predictor), predictor.summary))
         return context
+
+
+class BowDamageTrialDownloadView(ListView):
+    model = BowDamageTrial
+
+    def render_to_response(self, context, **response_kwargs):
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={
+                "Content-Disposition": "attachment; filename=bow_damage.csv"
+            }
+        )
+        csv_writer = csv.writer(response)
+        values_as_list = context["object_list"].values()
+        if not values_as_list:
+            raise BowDamageTrial.DoesNotExist()
+        csv_writer.writerow(k for k in values_as_list[0].keys())
+        for obj in values_as_list:
+            csv_writer.writerow(obj.values())
+
+        return response

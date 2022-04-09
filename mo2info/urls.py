@@ -19,6 +19,7 @@ from django.urls import path
 from mo2info.main.views import (
     BowDamagePredictorSummaryView,
     BowDamageTrialCreateView,
+    BowDamageTrialDownloadView,
     HomeView,
 )
 
@@ -34,5 +35,10 @@ urlpatterns = [
         "bow-damage/contribute/",
         BowDamageTrialCreateView.as_view(),
         name="bow-damage-contribute",
+    ),
+    path(
+        "bow-damage/download/",
+        BowDamageTrialDownloadView.as_view(),
+        name="bow-damage-download",
     ),
 ]
