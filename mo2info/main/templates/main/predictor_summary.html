@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>MO2 Bow Damage Model</title>
+        <style>
+        </style>
+    </head>
+    <body>
+        <h1>Bow Damage Model Summaries</h1>
+        {% for predictor, summary in summaries %}
+            <h2>{{ predictor }}</h2>
+            <h4>{{ filters }}</h4>
+            {{ summary|safe }}
+            <hr />
+        {% endfor %}
+    </body>
+</html>

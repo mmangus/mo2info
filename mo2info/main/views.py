@@ -1,7 +1,8 @@
 from django.urls import reverse
-from django.views.generic import CreateView
+from django.views.generic import CreateView, TemplateView
 
-from .models import BowDamageTrial
+from .models import BowDamageTrial, BowDamagePredictor
+
 
 class BowDamageTrialCreateView(CreateView):
     model = BowDamageTrial
@@ -17,3 +18,17 @@ class BowDamageTrialCreateView(CreateView):
         return reverse('bow-damage-create')
 
 
+class BowDamagePredictorSummaryView(TemplateView):
+    template_name = "main/predictor_summary.html"
+
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        context["summaries"] = []
+        for predictor in BowDamagePredictor.objects.all():
+            context["summaries"].append(
+                (
+                    str(predictor),
+                    predictor.summary
+                )
+            )
+        return context

@@ -16,7 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from mo2info.main.views import BowDamageTrialCreateView
+from mo2info.main.views import (
+    BowDamageTrialCreateView, BowDamagePredictorSummaryView
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +26,10 @@ urlpatterns = [
         'bow-damage/contribute/',
         BowDamageTrialCreateView.as_view(),
         name="bow-damage-create"
+    ),
+    path(
+        'bow-damage/',
+        BowDamagePredictorSummaryView.as_view(),
+        name="bow-damage-summary"
     ),
 ]
