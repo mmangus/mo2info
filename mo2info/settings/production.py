@@ -1,17 +1,19 @@
 import os
 
-from .base import *
+from .base import *  # noqa: F401, F403
 
 DEBUG = False
 
-ALLOWED_HOSTS = [".mo2.info", ]
+ALLOWED_HOSTS = [
+    ".mo2.info",
+]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.mo2.info",
 ]
 
 DATABASES = {
-    'default': {
+    "default": {
         "ENGINE": "django.db.backends.postgresql",
         # these env vars are managed by EB
         "NAME": os.environ["RDS_DB_NAME"],

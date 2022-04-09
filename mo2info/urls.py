@@ -17,20 +17,22 @@ from django.contrib import admin
 from django.urls import path
 
 from mo2info.main.views import (
-    BowDamageTrialCreateView, BowDamagePredictorSummaryView, HomeView
+    BowDamagePredictorSummaryView,
+    BowDamageTrialCreateView,
+    HomeView,
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', HomeView.as_view(), name="home"),
+    path("admin/", admin.site.urls),
+    path("", HomeView.as_view(), name="home"),
     path(
-        'bow-damage/contribute/',
+        "bow-damage/contribute/",
         BowDamageTrialCreateView.as_view(),
-        name="bow-damage-contribute"
+        name="bow-damage-contribute",
     ),
     path(
-        'bow-damage/',
+        "bow-damage/",
         BowDamagePredictorSummaryView.as_view(),
-        name="bow-damage-summary"
+        name="bow-damage-summary",
     ),
 ]

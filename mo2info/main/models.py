@@ -1,11 +1,10 @@
 import re
 from typing import Optional
 
-from pandas import DataFrame
-from statsmodels.formula.api import ols
-
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
+from pandas import DataFrame
+from statsmodels.formula.api import ols
 from statsmodels.regression.linear_model import RegressionResultsWrapper
 
 DAMAGE_LOG_RE = re.compile(r"((\d+)(?:\s*)){10}")
@@ -20,40 +19,37 @@ class BowDamageTrial(models.Model):
     bow_type = models.CharField(max_length=5, choices=BowTypeChoices.choices)
     range = models.FloatField(
         validators=[MinValueValidator(0.1)],
-        help_text="The range from the bow's tooltip"
+        help_text="The range from the bow's tooltip",
     )
     durability_current = models.FloatField(
         validators=[MinValueValidator(0.1)],
-        help_text="Remaining durability before starting the trial"
+        help_text="Remaining durability before starting the trial",
     )
     durability_max = models.FloatField(
         validators=[MinValueValidator(0.1)],
-        help_text="Maximum durability of the bow (second number in tooltip)"
+        help_text="Maximum durability of the bow (second number in tooltip)",
     )
     durability_pct = models.FloatField()
     damage_log = models.TextField(
-        validators = [
+        validators=[
             RegexValidator(
                 DAMAGE_LOG_RE,
-                message="Enter just the 10 numbers, 1 number per line"
+                message="Enter just the 10 numbers, 1 number per line",
             )
         ],
-        help_text="Enter 1 number per line"
+        help_text="Enter 1 number per line",
     )
     mean_damage = models.FloatField(
         validators=[MinValueValidator(0.0)],
-        help_text="The average damage per shot to the target dummy's head"
+        help_text="The average damage per shot to the target dummy's head",
     )
 
     def __str__(self) -> str:
         return f"{self.bow_type} @ {self.range}: {self.mean_damage}"
 
-
     def save(self, *args, **kwargs) -> None:
         # denormalizing bc we'll fit models to these values frequently
-        self.mean_damage = sum(
-            map(int, self.damage_log.split())
-        ) / 10
+        self.mean_damage = sum(map(int, self.damage_log.split())) / 10
         # TODO proper validator
         assert (
             self.durability_current <= self.durability_max
@@ -76,9 +72,7 @@ class BowDamagePredictor(models.Model):
 
     def prepare_dataframe(self) -> DataFrame:
         return DataFrame(
-            BowDamageTrial.objects.filter(
-                **self.queryset_filter
-            ).values()
+            BowDamageTrial.objects.filter(**self.queryset_filter).values()
         )
 
     def fit(self) -> Optional[RegressionResultsWrapper]:
@@ -88,10 +82,7 @@ class BowDamagePredictor(models.Model):
             self._cached_summary = "No Data"
             return
 
-        self._cached_predictor = ols(
-            formula=self.formula,
-            data=df
-        ).fit()
+        self._cached_predictor = ols(formula=self.formula, data=df).fit()
         self._cached_summary = self._cached_predictor.summary().as_html()
         return self._cached_predictor
 

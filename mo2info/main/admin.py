@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import BowDamageTrial, BowDamagePredictor
+from .models import BowDamagePredictor, BowDamageTrial
 
 
 @admin.register(BowDamageTrial)
