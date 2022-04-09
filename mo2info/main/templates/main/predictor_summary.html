@@ -9,9 +9,13 @@
         </style>
     </head>
     <body>
-        <h1>Bow Damage Model Summaries</h1>
+        <a href="{% url 'home' %}">Home</a>
+        <h3>Bow Damage Model Summaries</h3>
+        <h4>
+            <a href="{% url 'bow-damage-contribute' %}">Contribute</a>
+        </h4>
         {% for predictor, summary in summaries %}
-            <h2>{{ predictor }}</h2>
+            <h3>{{ predictor }}</h3>
             <h4>{{ filters }}</h4>
             {{ summary|safe }}
             <hr />

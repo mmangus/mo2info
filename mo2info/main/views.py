@@ -4,6 +4,10 @@ from django.views.generic import CreateView, TemplateView
 from .models import BowDamageTrial, BowDamagePredictor
 
 
+class HomeView(TemplateView):
+    template_name = "main/home.html"
+
+
 class BowDamageTrialCreateView(CreateView):
     model = BowDamageTrial
     fields = [
@@ -15,7 +19,7 @@ class BowDamageTrialCreateView(CreateView):
     ]
 
     def get_success_url(self) -> str:
-        return reverse('bow-damage-create')
+        return reverse('bow-damage-contribute')
 
 
 class BowDamagePredictorSummaryView(TemplateView):

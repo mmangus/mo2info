@@ -20,7 +20,11 @@
         </style>
     </head>
     <body>
+        <a href="{% url 'home' %}">Home</a>
         <h3>Bow Damage Data</h3>
+        <h4>
+            <a href="{% url 'bow-damage-summary' %}">Latest Model Summary</a>
+        </h4>
         <ol>
             <li>
                 Make sure your Archery skill is 100.
@@ -50,7 +54,7 @@
                 per line.
             </li>
         </ol>
-        <form action="{% url 'bow-damage-create' %}" method="POST">
+        <form action="{% url 'bow-damage-contribute' %}" method="POST">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Submit" />
