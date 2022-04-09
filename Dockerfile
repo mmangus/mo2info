@@ -22,7 +22,7 @@ RUN pip3 install --upgrade pip
 RUN pip3 install pip-tools
 
 COPY . /mo2info
-RUN pip-sync
+RUN pip-sync --pip-args '--no-cache-dir'
 
 RUN python manage.py migrate
 
