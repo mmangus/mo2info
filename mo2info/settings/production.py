@@ -6,6 +6,10 @@ DEBUG = False
 
 ALLOWED_HOSTS = [".mo2.info", ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.mo2.info",
+]
+
 DATABASES = {
     'default': {
         "ENGINE": "django.db.backends.postgresql",
