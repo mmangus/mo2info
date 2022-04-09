@@ -67,6 +67,8 @@ class BowDamagePredictor(models.Model):
     formula = models.CharField(max_length=500)
     queryset_filter = models.JSONField(default=dict)
 
+    # TODO cache by predictor id and persist as long as the container does
+    #  unless manually busted
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._cached_predictor: Optional[RegressionResultsWrapper] = None
