@@ -77,7 +77,6 @@ class BowDamagePredictor(models.Model):
     class CachedPredictor(TypedDict):
         predictor: Optional[RegressionResultsWrapper]
         summary: str
-        last_id: int
 
     _instance_cache: dict[int, CachedPredictor] = {}
 
@@ -88,15 +87,12 @@ class BowDamagePredictor(models.Model):
         cached_predictor: Optional[
             BowDamagePredictor.CachedPredictor
         ] = cache.get(self._cache_key)
-        if (
-            not cached_predictor
-            or cached_predictor["last_id"] != self._last_id
-        ):
+        if not cached_predictor:
             self.update_and_cache()
 
     @cached_property
     def _cache_key(self) -> str:
-        return f"{self._meta.model_name}:{self.id}"
+        return f"{self._meta.model_name}:{self.id}:{self._last_id}"
 
     @cached_property
     def _last_id(self) -> int:
@@ -118,7 +114,6 @@ class BowDamagePredictor(models.Model):
             return {
                 "predictor": None,
                 "summary": "No Data",
-                "last_id": self._last_id,
             }
 
         try:
@@ -128,13 +123,11 @@ class BowDamagePredictor(models.Model):
             return {
                 "predictor": None,
                 "summary": repr(e),
-                "last_id": self._last_id,
             }
 
         return {
             "predictor": predictor,
             "summary": summary,
-            "last_id": self._last_id,
         }
 
     @property
