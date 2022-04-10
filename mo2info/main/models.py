@@ -87,8 +87,8 @@ class BowDamagePredictor(models.Model):
     def _cache_key(self) -> str:
         # TODO: need a better cache-busting strategy, this approach doesn't
         #  account for queryset_filters but is a guaranteed index-only scan
-        instance = BowDamageTrial.objects.only("id").order_by("id").last()
-        last_id = instance.id if instance else 0
+        last_instance = BowDamageTrial.objects.only("id").order_by("id").last()
+        last_id = last_instance.id if last_instance else 0
         return f"{self._meta.model_name}:{self.id}:{last_id}"
 
     def update_and_cache(self) -> None:

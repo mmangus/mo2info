@@ -141,5 +141,11 @@ CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
         "LOCATION": "127.0.0.1:11211",
+        "TIMEOUT": 60 * 60 * 24,  # 1 day
+        "OPTIONS": {
+            # memory is tight on this cheap instance, 1000 simple OLS models
+            #  would be about 50 MB i think?
+            "MAX_ENTRIES": 1000,
+        },
     }
 }
