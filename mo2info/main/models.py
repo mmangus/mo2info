@@ -1,5 +1,5 @@
 import re
-from typing import Optional
+from typing import Optional, TypedDict
 
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
@@ -11,6 +11,10 @@ DAMAGE_LOG_RE = re.compile(r"((\d+)(?:\s*)){10}")
 
 
 class BowDamageTrial(models.Model):
+    """
+    Records data about bow damage dealt to a target dummy over 10 shots
+    """
+
     class BowTypeChoices(models.TextChoices):
         ASYM = "ASYM", "Asymmetric"
         LONG = "LONG", "Long"
@@ -59,47 +63,63 @@ class BowDamageTrial(models.Model):
 
 
 class BowDamagePredictor(models.Model):
+    """
+    Predicts bow damage using OLS regression
+    """
 
+    id: int  # stop type complaints for implicit int PK
     formula = models.CharField(max_length=500)
     queryset_filter = models.JSONField(default=dict)
 
-    # TODO cache by predictor id and persist as long as the container does
-    #  unless manually busted
+    # We keep a cache of the model details by instance ID as a class attribute
+    #  so we aren't re-computing it every time.
+    class CachedPredictor(TypedDict):
+        predictor: Optional[RegressionResultsWrapper]
+        summary: str
+
+    _instance_cache: dict[int, CachedPredictor] = {}
+
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self._cached_predictor: Optional[RegressionResultsWrapper] = None
-        self._cached_summary: Optional[str] = None
+        if self.id not in self._instance_cache:
+            self.update_and_cache()
 
-    def prepare_dataframe(self) -> DataFrame:
+    def update_and_cache(self) -> None:
+        self._instance_cache[self.id] = self._fit()
+
+    def _prepare_dataframe(self) -> DataFrame:
         return DataFrame(
             BowDamageTrial.objects.filter(**self.queryset_filter).values()
         )
 
-    def fit(self) -> Optional[RegressionResultsWrapper]:
-        df = self.prepare_dataframe()
+    def _fit(self) -> CachedPredictor:
+        df = self._prepare_dataframe()
         if df.empty:
-            self._cached_predictor = None
-            self._cached_summary = "No Data"
-            return None
+            return {"predictor": None, "summary": "No Data"}
 
-        self._cached_predictor = ols(formula=self.formula, data=df).fit()
-        self._cached_summary = self._cached_predictor.summary().as_html()
-        return self._cached_predictor
+        predictor = ols(formula=self.formula, data=df).fit()
+
+        return {
+            "predictor": predictor,
+            "summary": predictor.summary().as_html(),
+        }
 
     @property
-    def predictor(self) -> RegressionResultsWrapper:
-        if not self._cached_predictor:
-            self.fit()
-        return self._cached_predictor
+    def predictor(self) -> Optional[RegressionResultsWrapper]:
+        return self._instance_cache[self.id]["predictor"]
 
     @property
     def summary(self) -> str:
-        if not self._cached_summary:
-            self.fit()
-        assert isinstance(self._cached_summary, str)
-        return self._cached_summary
+        return self._instance_cache[self.id]["summary"]
 
     def predict(self, *args, **kwargs) -> list[float]:
+        """
+        Wrapper around `RegressionResultsWrapper.predict` which accepts a dict
+         of observations keyed by regressor name like `{"feature": [...]}` and
+         returns a list of predicted values for the observations.
+        """
+        if not self.predictor:
+            raise RuntimeError("No model available for prediction (no data?)")
         return list(self.predictor.predict(*args, **kwargs))
 
     def __str__(self) -> str:
