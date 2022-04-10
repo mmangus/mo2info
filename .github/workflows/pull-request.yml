@@ -1,0 +1,21 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches: [ live ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Prepare test environment
+        run: cd dev && docker-compose up --build
+
+      - name: Check for missing migrations
+        run: docker-compose exec api "python manage.py makemigrations --check"
+
+      - name: Lint and test
+        run: docker-compose exec api "isort --check-only mo2info && black --check mo2info && flake8 mo2info"

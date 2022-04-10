@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+changed_files=$(git diff --diff-filter=d --cached --name-only)
+docker-compose exec api 'isort mo2info && black mo2info && flake8 mo2info'
+git add $(echo "$changed_files" | paste -s -d " " -)

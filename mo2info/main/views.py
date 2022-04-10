@@ -1,8 +1,6 @@
 import csv
-import json
 
-from django.core import serializers
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.urls import reverse
 from django.views.generic import CreateView, ListView, TemplateView
 
