@@ -28,6 +28,7 @@ RUN pip3 install pip-tools
 # even though we have a volume, we want to bust cache if these change
 COPY requirements.txt requirements.txt
 COPY requirements-dev.txt requirements-dev.txt
+# TODO: install to a .venv that can serve as a cache for less downloading
 RUN pip-sync requirements.txt requirements-dev.txt
 
 ENTRYPOINT python manage.py migrate && python manage.py runserver 0.0.0.0:8000

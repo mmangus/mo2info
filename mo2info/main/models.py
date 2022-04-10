@@ -80,7 +80,7 @@ class BowDamagePredictor(models.Model):
         if df.empty:
             self._cached_predictor = None
             self._cached_summary = "No Data"
-            return
+            return None
 
         self._cached_predictor = ols(formula=self.formula, data=df).fit()
         self._cached_summary = self._cached_predictor.summary().as_html()
@@ -96,6 +96,7 @@ class BowDamagePredictor(models.Model):
     def summary(self) -> str:
         if not self._cached_summary:
             self.fit()
+        assert isinstance(self._cached_summary, str)
         return self._cached_summary
 
     def predict(self, *args, **kwargs) -> list[float]:

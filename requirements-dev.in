@@ -3,4 +3,7 @@ black
 flake8
 isort
 mypy
-django-extensions
+pandas-stubs
+git+https://github.com/numpy/numpy-stubs
+django-stubs
+django-stubs-ext

@@ -3,3 +3,22 @@ line-length = 79
 
 [tool.isort]
 profile = 'black'
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+exclude = [
+    "migrations/.*",
+]
+warn_unused_ignores = true
+warn_redundant_casts = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = [
+    "statsmodels.formula.api",
+    "statsmodels.regression.linear_model",
+]
+ignore_missing_imports = true
+
+[tool.django-stubs]
+django_settings_module = "mo2info.settings.development"

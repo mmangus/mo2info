@@ -1,4 +1,9 @@
+import django_stubs_ext
+
 from .base import *  # noqa: F401, F403
+
+django_stubs_ext.monkeypatch()  # enable QuerySet generics
+
 
 DEBUG = True
 
