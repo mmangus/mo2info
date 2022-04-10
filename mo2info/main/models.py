@@ -1,6 +1,7 @@
 import re
 from typing import Optional, TypedDict
 
+from django.core.cache import cache
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from django.utils.functional import cached_property
@@ -72,7 +73,9 @@ class BowDamagePredictor(models.Model):
     queryset_filter = models.JSONField(default=dict)
 
     # We keep a cache of the model details by instance ID as a class attribute
-    #  so we aren't re-computing it every time.
+    #  so we aren't re-computing it every time
+    # TODO: each gunicorn thread ends up w/ its own cache, need to set up
+    #  redis/memcached
     class CachedPredictor(TypedDict):
         predictor: Optional[RegressionResultsWrapper]
         summary: str
@@ -84,11 +87,18 @@ class BowDamagePredictor(models.Model):
         super().__init__(*args, **kwargs)
         # TODO: need a better cache-busting strategy, this approach doesn't
         #  account for queryset_filters but is a guaranteed index-only scan
+        cached_predictor: Optional[
+            BowDamagePredictor.CachedPredictor
+        ] = cache.get(self._cache_key)
         if (
-            self.id not in self._instance_cache
-            or self._instance_cache[self.id]["last_id"] != self._last_id
+            not cached_predictor
+            or cached_predictor["last_id"] != self._last_id
         ):
             self.update_and_cache()
+
+    @cached_property
+    def _cache_key(self) -> str:
+        return f"{self._meta.model_name}:{self.id}"
 
     @cached_property
     def _last_id(self) -> int:
@@ -97,7 +107,7 @@ class BowDamagePredictor(models.Model):
         return 0
 
     def update_and_cache(self) -> None:
-        self._instance_cache[self.id] = self._fit()
+        cache.set(self._cache_key, self._fit())
 
     def _prepare_dataframe(self) -> DataFrame:
         return DataFrame(
@@ -131,11 +141,11 @@ class BowDamagePredictor(models.Model):
 
     @property
     def predictor(self) -> Optional[RegressionResultsWrapper]:
-        return self._instance_cache[self.id]["predictor"]
+        return cache.get(self._cache_key)["predictor"]
 
     @property
     def summary(self) -> str:
-        return self._instance_cache[self.id]["summary"]
+        return cache.get(self._cache_key)["summary"]
 
     def predict(self, *args, **kwargs) -> list[float]:
         """

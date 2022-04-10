@@ -12,7 +12,7 @@ RUN chmod 0600 /mo2info/.pgpass
 
 # install postgres 14 client
 RUN apt-get update
-RUN apt-get install -y lsb-release
+RUN apt-get install -y lsb-release memcached
 RUN echo \
     "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main"\
      > /etc/apt/sources.list.d/pgdg.list
@@ -31,4 +31,4 @@ COPY requirements-dev.txt requirements-dev.txt
 # TODO: install to a .venv that can serve as a cache for less downloading
 RUN pip-sync requirements.txt requirements-dev.txt
 
-ENTRYPOINT python manage.py migrate && python manage.py runserver 0.0.0.0:8000
+ENTRYPOINT service memcached start && python manage.py migrate && python manage.py runserver 0.0.0.0:8000
