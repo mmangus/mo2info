@@ -82,8 +82,6 @@ class BowDamagePredictor(models.Model):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        # TODO: need a better cache-busting strategy, this approach doesn't
-        #  account for queryset_filters but is a guaranteed index-only scan
         cached_predictor: Optional[
             BowDamagePredictor.CachedPredictor
         ] = cache.get(self._cache_key)
@@ -92,13 +90,11 @@ class BowDamagePredictor(models.Model):
 
     @cached_property
     def _cache_key(self) -> str:
-        return f"{self._meta.model_name}:{self.id}:{self._last_id}"
-
-    @cached_property
-    def _last_id(self) -> int:
-        if instance := BowDamageTrial.objects.only("id").order_by("id").last():
-            return instance.id
-        return 0
+        # TODO: need a better cache-busting strategy, this approach doesn't
+        #  account for queryset_filters but is a guaranteed index-only scan
+        instance = BowDamageTrial.objects.only("id").order_by("id").last()
+        last_id = instance.id if instance else 0
+        return f"{self._meta.model_name}:{self.id}:{last_id}"
 
     def update_and_cache(self) -> None:
         cache.set(self._cache_key, self._fit())
