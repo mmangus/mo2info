@@ -8,17 +8,13 @@ from .models import BowDamagePredictor, BowDamageTrial
 
 
 class HomeView(TemplateView):
-    """
-    Lists models under development
-    """
+    """Lists models under development"""
 
     template_name = "main/home.html"
 
 
 class BowDamageTrialCreateView(CreateView):
-    """
-    Records bow type, durability, range, and damage dealth
-    """
+    """Records bow type, durability, range, and damage dealth"""
 
     model = BowDamageTrial
     fields = [
@@ -34,9 +30,7 @@ class BowDamageTrialCreateView(CreateView):
 
 
 class BowDamagePredictorSummaryView(TemplateView):
-    """
-    Lists summary data for alternative bow damage models
-    """
+    """Lists summary data for alternative bow damage models"""
 
     template_name = "main/predictor_summary.html"
 
@@ -49,23 +43,22 @@ class BowDamagePredictorSummaryView(TemplateView):
 
 
 class BowDamageTrialDownloadView(ListView):
-    """
-    Allows downloading all the bow damage data as a CSV
-    """
+    """Allows downloading all the bow damage data as a CSV"""
 
     model = BowDamageTrial
 
     def render_to_response(self, context, **response_kwargs):
-        response = HttpResponse(
-            content_type="text/csv",
-            headers={
-                "Content-Disposition": "attachment; filename=bow_damage.csv"
-            },
-        )
-        csv_writer = csv.writer(response)
         values_as_list = context["object_list"].values()
         if not values_as_list:
             raise BowDamageTrial.DoesNotExist()
+
+        response = HttpResponse(
+            content_type="text/csv",
+            headers={
+                "Content-Disposition": "attachment; filename=bow-damage.csv"
+            },
+        )
+        csv_writer = csv.writer(response)
         csv_writer.writerow(k for k in values_as_list[0].keys())
         for obj in values_as_list:
             csv_writer.writerow(obj.values())

@@ -3,6 +3,7 @@ from typing import Optional, TypedDict
 
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
+from django.utils.functional import cached_property
 from pandas import DataFrame
 from statsmodels.formula.api import ols
 from statsmodels.regression.linear_model import RegressionResultsWrapper
@@ -11,9 +12,7 @@ DAMAGE_LOG_RE = re.compile(r"((\d+)(?:\s*)){10}")
 
 
 class BowDamageTrial(models.Model):
-    """
-    Records data about bow damage dealt to a target dummy over 10 shots
-    """
+    """Records data about bow damage dealt to a target dummy over 10 shots"""
 
     class BowTypeChoices(models.TextChoices):
         ASYM = "ASYM", "Asymmetric"
@@ -31,7 +30,7 @@ class BowDamageTrial(models.Model):
     )
     durability_max = models.FloatField(
         validators=[MinValueValidator(0.1)],
-        help_text="Maximum durability of the bow (second number in tooltip)",
+        help_text="Maximum durability of the bow",
     )
     durability_pct = models.FloatField()
     damage_log = models.TextField(
@@ -64,7 +63,8 @@ class BowDamageTrial(models.Model):
 
 class BowDamagePredictor(models.Model):
     """
-    Predicts bow damage using OLS regression
+    Predicts bow damage with OLS regression using the specified formula over
+     all BowDamageTrial instances that match the queryset_filter conditions
     """
 
     id: int  # stop type complaints for implicit int PK
@@ -76,13 +76,25 @@ class BowDamagePredictor(models.Model):
     class CachedPredictor(TypedDict):
         predictor: Optional[RegressionResultsWrapper]
         summary: str
+        last_id: int
 
     _instance_cache: dict[int, CachedPredictor] = {}
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        if self.id not in self._instance_cache:
+        # TODO: need a better cache-busting strategy, this approach doesn't
+        #  account for queryset_filters but is a guaranteed index-only scan
+        if (
+            self.id not in self._instance_cache
+            or self._instance_cache[self.id]["last_id"] != self._last_id
+        ):
             self.update_and_cache()
+
+    @cached_property
+    def _last_id(self) -> int:
+        if instance := BowDamageTrial.objects.only("id").order_by("id").last():
+            return instance.id
+        return 0
 
     def update_and_cache(self) -> None:
         self._instance_cache[self.id] = self._fit()
@@ -95,13 +107,26 @@ class BowDamagePredictor(models.Model):
     def _fit(self) -> CachedPredictor:
         df = self._prepare_dataframe()
         if df.empty:
-            return {"predictor": None, "summary": "No Data"}
+            return {
+                "predictor": None,
+                "summary": "No Data",
+                "last_id": self._last_id,
+            }
 
-        predictor = ols(formula=self.formula, data=df).fit()
+        try:
+            predictor = ols(formula=self.formula, data=df).fit()
+            summary = predictor.summary().as_html()
+        except Exception as e:
+            return {
+                "predictor": None,
+                "summary": repr(e),
+                "last_id": self._last_id,
+            }
 
         return {
             "predictor": predictor,
-            "summary": predictor.summary().as_html(),
+            "summary": summary,
+            "last_id": self._last_id,
         }
 
     @property
