@@ -2,5 +2,5 @@
 set -e
 
 changed_files=$(git diff --diff-filter=d --cached --name-only)
-docker-compose exec api 'isort mo2info && black mo2info && flake8 mo2info'
+docker-compose -f dev/docker-compose.yml run --rm --entrypoint="isort mo2info && black mo2info && flake8 mo2info" api
 git add $(echo "$changed_files" | paste -s -d " " -)

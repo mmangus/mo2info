@@ -44,7 +44,7 @@ class BowDamageTrialDownloadView(ListView):
             content_type="text/csv",
             headers={
                 "Content-Disposition": "attachment; filename=bow_damage.csv"
-            }
+            },
         )
         csv_writer = csv.writer(response)
         values_as_list = context["object_list"].values()
