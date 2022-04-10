@@ -78,14 +78,9 @@ class BowDamagePredictor(models.Model):
         predictor: Optional[RegressionResultsWrapper]
         summary: str
 
-    _instance_cache: dict[int, CachedPredictor] = {}
-
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        cached_predictor: Optional[
-            BowDamagePredictor.CachedPredictor
-        ] = cache.get(self._cache_key)
-        if not cached_predictor:
+        if not cache.get(self._cache_key):
             self.update_and_cache()
 
     @cached_property
