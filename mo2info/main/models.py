@@ -74,8 +74,6 @@ class BowDamagePredictor(models.Model):
 
     # We keep a cache of the model details by instance ID as a class attribute
     #  so we aren't re-computing it every time
-    # TODO: each gunicorn thread ends up w/ its own cache, need to set up
-    #  redis/memcached
     class CachedPredictor(TypedDict):
         predictor: Optional[RegressionResultsWrapper]
         summary: str
