@@ -14,12 +14,12 @@ jobs:
 
       - name: Lint and test
         run: |
-          DOCKER_BUILDKIT=1 docker-compose -f dev/docker-compose.yml run --rm 
-          --entrypoint="isort --check-only mo2info && black --check mo2info && flake8 mo2info" 
+          DOCKER_BUILDKIT=1 docker-compose -f dev/docker-compose.yml run --rm \ 
+          --entrypoint="bash - c 'isort --check-only mo2info && black --check mo2info && flake8 mo2info'" \ 
           api
 
       - name: Check for missing migrations
         run: |
-          DOCKER_BUILDKIT=1 docker-compose -f dev/docker-compose.yml run --rm
-          --entrypoint="python manage.py makemigrations --check" 
+          DOCKER_BUILDKIT=1 docker-compose -f dev/docker-compose.yml run --rm \
+          --entrypoint="python manage.py makemigrations --check" \
           api 
