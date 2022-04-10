@@ -42,6 +42,10 @@ class BowDamagePredictorSummaryView(TemplateView):
         return context
 
 
+class BowDamagePredictionView(TemplateView):
+    ...
+
+
 class BowDamageTrialDownloadView(ListView):
     """Allows downloading all the bow damage data as a CSV"""
 
