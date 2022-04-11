@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from mo2info.main.views import (
+    BowDamagePredictionView,
     BowDamagePredictorSummaryView,
     BowDamageTrialCreateView,
     BowDamageTrialDownloadView,
@@ -28,6 +29,11 @@ urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path(
         "bow-damage/",
+        BowDamagePredictionView.as_view(),
+        name="bow-damage-prediction",
+    ),
+    path(
+        "bow-damage/summary/",
         BowDamagePredictorSummaryView.as_view(),
         name="bow-damage-summary",
     ),

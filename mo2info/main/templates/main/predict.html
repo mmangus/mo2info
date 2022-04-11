@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>MO2 Bow Damage Data Collection</title>
+        <style>
+            .helptext {
+                font-size: 0.9em;
+                color: #444;
+            }
+            label, input {
+                display: flex;
+                flex-direction: column;
+            }
+            ol, ul {
+                padding-left: 1em;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="{% url 'home' %}">Home</a>
+        <h3>Bow Damage Estimator</h3>
+        <h4>
+            <a href="{% url 'bow-damage-summary' %}">Latest Model Summary</a>
+        </h4>
+        <form action="{% url 'bow-damage-prediction' %}" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit" />
+        </form>
+    </body>
+</html>

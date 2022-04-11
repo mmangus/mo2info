@@ -89,7 +89,7 @@ class BowDamagePredictor(models.Model):
         #  account for queryset_filters but is a guaranteed index-only scan
         last_instance = BowDamageTrial.objects.only("id").order_by("id").last()
         last_id = last_instance.id if last_instance else 0
-        return f"{self._meta.model_name}:{self.id}:{last_id}"
+        return f"{self._meta.model_name}:{self.id or id(self)}:{last_id}"
 
     def update_and_cache(self) -> None:
         cache.set(self._cache_key, self._fit())

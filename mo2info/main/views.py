@@ -1,8 +1,10 @@
 import csv
 
+from django.forms import ModelForm
 from django.http import HttpResponse
 from django.urls import reverse
-from django.views.generic import CreateView, ListView, TemplateView
+from django.views.generic import CreateView, FormView, ListView, TemplateView
+from pandas import DataFrame
 
 from .models import BowDamagePredictor, BowDamageTrial
 
@@ -42,8 +44,29 @@ class BowDamagePredictorSummaryView(TemplateView):
         return context
 
 
-class BowDamagePredictionView(TemplateView):
-    ...
+# TODO install DRF and use its serializer layer + React client
+class BowDamagePredictionForm(ModelForm):
+    class Meta:
+        model = BowDamageTrial
+        fields = ["bow_type", "range"]
+
+
+class BowDamagePredictionView(FormView):
+    form_class = BowDamagePredictionForm
+    template_name = "main/predict.html"
+
+    def form_valid(self, form: BowDamagePredictionForm) -> HttpResponse:
+        # TODO dynamic selection of precached predictor
+        predictor = BowDamagePredictor(
+            formula="mean_damage ~ range",
+            queryset_filter={"bow_type": form.cleaned_data["bow_type"]},
+        )
+        damage = predictor.predict(
+            # exception if not a DataFrame when using formula api soooo guess
+            #  we won't be using the formula api...
+            DataFrame([{"range": form.cleaned_data["range"]}])
+        )[0]
+        return HttpResponse(damage)
 
 
 class BowDamageTrialDownloadView(ListView):
