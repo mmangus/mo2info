@@ -4,7 +4,6 @@ from django.forms import ModelForm
 from django.http import HttpResponse
 from django.urls import reverse
 from django.views.generic import CreateView, FormView, ListView, TemplateView
-from pandas import DataFrame
 
 from .models import BowDamagePredictor, BowDamageTrial
 
@@ -56,16 +55,12 @@ class BowDamagePredictionView(FormView):
     template_name = "main/predict.html"
 
     def form_valid(self, form: BowDamagePredictionForm) -> HttpResponse:
-        # TODO dynamic selection of precached predictor
+        # FIXME dynamic selection of precached predictor
         predictor = BowDamagePredictor(
             formula="mean_damage ~ range",
             queryset_filter={"bow_type": form.cleaned_data["bow_type"]},
         )
-        damage = predictor.predict(
-            # exception if not a DataFrame when using formula api soooo guess
-            #  we won't be using the formula api...
-            DataFrame([{"range": form.cleaned_data["range"]}])
-        )[0]
+        damage = predictor.predict({"range": [form.cleaned_data["range"]]})[0]
         return HttpResponse(damage)
 
 
