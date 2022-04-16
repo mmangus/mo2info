@@ -49,6 +49,13 @@ it into a predictive model that is continuously updated as new data comes in.
 - [ ] **Initial frontend**: Replace the old-school vanilla Django template system 
 with a user-friendly frontend React client. Convert the backend to a 
 Django Rest Framework project providing a JSON API.
+- [ ] **Continuous deployment**: GitHub Actions are already used to run PR tests, 
+but need additional configuration to actually deploy to AWS (currently must be
+deployed via command line by the project owner).
+- [ ] **Improved development environment**: You can clone this repo, 
+`cd dev && docker-compose up` to bring up a Docker dev environment, but it 
+currently takes some hand-holding to get your local DB into shape, create migrations,
+etc.
 - [ ] **Broaden scope**: Bow damage calculation is just one of many subsystems in
 the game that could be modeled. Design more experiments and increase the number
 of calculators available. (This will probably be the bulk of work on this project
