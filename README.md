@@ -1,9 +1,9 @@
 # [mo2.info](https://app.mo2.info)
 Many of the systems in [Mortal Online 2](https://www.mortalonline2.com/)
 are undocumented, leaving players to experiment and discover on their own.
-The goal of this project is to facilitate data-driven analysis of the game,
-producing online calculators that update their predictions automatically as
-new data comes in.
+The goal of [mo2.info](https://app.mo2.info) is to facilitate data-driven 
+analysis of the game, producing online calculators that update their 
+predictions automatically as new data comes in.
 
 ## Overview
 Let's begin with an example: Given the in-game tooltip stats for a bow, 
