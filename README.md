@@ -25,8 +25,9 @@ form to contribute data.
 
 In order to turn that raw data into a predictive model, a 
 [`BowDamagePredictor`](mo2info/main/models.py) can define a regression `formula`
-like `mean_damage ~ range` (i.e., mean damage is a function of range). The 
-predictor instances can also define a `queryset_filter` to limit the input data
+like `mean_damage ~ range` (i.e., mean damage is a function of range). 
+
+The predictor instances can also define a `queryset_filter` to limit the input data
 used for fitting the predictive model. For instance, the range-to-damage function
 when using longbow arrows is different than when using broadhead arrows, so we have 
 two different `BowDamagePredictor` instances: one for longbows (which use longbow arrows),
