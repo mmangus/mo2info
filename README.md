@@ -13,7 +13,8 @@ target dummy?
 Many players know that the `Range` stat is a key indicator of the relative
 damage of different bows, but don't know exactly how much damage a given bow
 can do in *absolute* terms. If we assume that damage is a linear function of
-range, it should be simple to build a bow damage calculator using plain old
+range (provided that the player has maxed out all the relevant archery stats),
+it should be simple to build a bow damage calculator using plain old
 OLS regression. 
 
 So, bow damage estimation is the first system that's been modeled in this 
