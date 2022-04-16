@@ -51,7 +51,8 @@ with a user-friendly frontend React client. Convert the backend to a
 Django Rest Framework project providing a JSON API.
 - [ ] **Continuous deployment**: GitHub Actions are already used to run PR tests, 
 but need additional configuration to actually deploy to AWS (currently must be
-deployed via command line by the project owner).
+deployed via command line by the project owner). There is also currently no
+mechanism to deploy static files, which will be required for the frontend.
 - [ ] **Improved development environment**: You can clone this repo and simply
 `cd dev && docker-compose up` to bring up a Docker dev environment, but it 
 currently takes some hand-holding to get your local DB into shape, create migrations,
@@ -72,5 +73,5 @@ sophisticated predictive models might be needed for some systems.
 1. Define a data model to collect experimental trials, similar to 
 [`BowDamageTrial`](mo2info/main/models.py).
 2. Create a subclass of `CachedPredictor` that can model the data you collected (e.g., 
-a new subclass of [`CachedOLSPredictor`](mo2info/main/models.py)). 
+a new subclass of [`CachedOLSPredictor`](mo2info/main/models.py)).
 3. Define [`View`s](mo2info/main/models.py) to collect data and produce a prediction.
