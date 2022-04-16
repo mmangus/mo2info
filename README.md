@@ -42,8 +42,8 @@ recorded, the cache is busted and the model will be recalculated the next time i
 used.
 
 ## Project Status and Roadmap
-This is currently **the very first version** of this app. There is a lot that
-still needs to be done:
+This is currently **the very first proof-of-concept version** of this app. There is 
+a lot that still needs to be done:
 - [X] **Initial backend**: Able to collect data about a game subsystem and turn
 it into a predictive model that is continuously updated as new data comes in.
 - [ ] **Initial frontend**: Replace the old-school vanilla Django template system 
