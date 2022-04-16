@@ -1,5 +1,6 @@
 import csv
 
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from django.http import HttpResponse
 from django.urls import reverse
@@ -45,6 +46,25 @@ class BowDamagePredictorSummaryView(TemplateView):
 
 # TODO install DRF and use its serializer layer + React client
 class BowDamagePredictionForm(ModelForm):
+    def clean(self):
+        # this is a silly hack to show you the result as if it were a
+        #  form error, which conveniently takes you back to the form with
+        #  the previous values still filled in
+        cleaned_data = super().clean()
+        # FIXME what really matters seems to be arrow type not bow type?
+        if cleaned_data["bow_type"] == "LONG":
+            filter = {"bow_type": "LONG"}
+        else:
+            filter = {"bow_type__in": ["SHORT", "ASYM"]}
+        # TODO come up w/ a strategy to dynamically select the best model
+        predictor, _ = BowDamagePredictor.objects.get_or_create(
+            formula="mean_damage ~ range", queryset_filter=filter
+        )
+        damage = predictor.predict({"range": [cleaned_data["range"]]})[0]
+        raise ValidationError(
+            f"Estimated average damage per shot: {round(damage)}"
+        )
+
     class Meta:
         model = BowDamageTrial
         fields = ["bow_type", "range"]
@@ -53,15 +73,6 @@ class BowDamagePredictionForm(ModelForm):
 class BowDamagePredictionView(FormView):
     form_class = BowDamagePredictionForm
     template_name = "main/predict.html"
-
-    def form_valid(self, form: BowDamagePredictionForm) -> HttpResponse:
-        # FIXME dynamic selection of precached predictor
-        predictor = BowDamagePredictor(
-            formula="mean_damage ~ range",
-            queryset_filter={"bow_type": form.cleaned_data["bow_type"]},
-        )
-        damage = predictor.predict({"range": [form.cleaned_data["range"]]})[0]
-        return HttpResponse(damage)
 
 
 class BowDamageTrialDownloadView(ListView):

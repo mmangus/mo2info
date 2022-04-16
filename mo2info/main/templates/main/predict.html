@@ -4,12 +4,8 @@
             name="viewport"
             content="width=device-width, initial-scale=1.0"
         />
-        <title>MO2 Bow Damage Data Collection</title>
+        <title>MO2 Bow Damage Calculator</title>
         <style>
-            .helptext {
-                font-size: 0.9em;
-                color: #444;
-            }
             label, input {
                 display: flex;
                 flex-direction: column;
@@ -21,14 +17,24 @@
     </head>
     <body>
         <a href="{% url 'home' %}">Home</a>
-        <h3>Bow Damage Estimator</h3>
+        <h3>Bow Damage Calculator</h3>
         <h4>
-            <a href="{% url 'bow-damage-summary' %}">Latest Model Summary</a>
+            <a href="{% url 'bow-damage-contribute' %}">Contribute</a> |
+            <a href="{% url 'bow-damage-summary' %}">Model Details</a> |
+            <a href="{% url 'bow-damage-download' %}">Download Raw Data</a>
         </h4>
         <form action="{% url 'bow-damage-prediction' %}" method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
+            <p>
+                {{ form.bow_type.label_tag }}
+                {{ form.bow_type }}
+            </p>
+            <p>
+                {{ form.range.label_tag }}
+                {{ form.range }}
+            </p>
             <input type="submit" value="Submit" />
+            {{ form.non_field_errors }}
         </form>
     </body>
 </html>

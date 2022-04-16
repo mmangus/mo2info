@@ -4,15 +4,14 @@
             name="viewport"
             content="width=device-width, initial-scale=1.0"
         />
-        <title>MO2 Bow Damage Model</title>
-        <style>
-        </style>
+        <title>MO2 Bow Damage Model Details</title>
     </head>
     <body>
         <a href="{% url 'home' %}">Home</a>
-        <h3>Bow Damage Model Summaries</h3>
+        <h3>Bow Damage Model Details</h3>
         <h4>
             <a href="{% url 'bow-damage-contribute' %}">Contribute</a> |
+            <a href="{% url 'bow-damage-prediction' %}">Calculator</a> |
             <a href="{% url 'bow-damage-download' %}">Download Raw Data</a>
         </h4>
         {% for predictor, summary in summaries %}
