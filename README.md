@@ -61,13 +61,12 @@ builds much faster.
 - [ ] **Broaden scope**: Bow damage calculation is just one of many subsystems in
 the game that could be modeled. Design more experiments and increase the number
 of calculators available. (This will probably be the bulk of work on this project
-in the long run).
+in the long run.)
+- [ ] **Expand model types**: OLS regression will answer a lot of questions, but more
+sophisticated predictive models might be needed for some systems.
 - [ ] **Dynamic model selection**: Rather than hard-coding which predictive model
 to use for a certain system, dynamically select the best among competing
 models.
-- [ ] **Expand model types**: OLS regression will answer a lot of questions, but more
-sophisticated predictive models might be needed for some systems.
-
 
 ## How to Build a New Calculator
 1. Define a data model to collect experimental trials, similar to 
