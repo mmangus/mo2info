@@ -1,0 +1,6 @@
+[flake8]
+max-line-length = 79
+# E203 gets upset about ` : ` in slices
+extend-ignore = E203
+show-source = True
+exclude = .*,.*/*,manage.py,*migrations*,*.ipynb

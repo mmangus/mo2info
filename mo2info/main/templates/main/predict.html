@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>MO2 Bow Damage Calculator</title>
+        <style>
+            label, input {
+                display: flex;
+                flex-direction: column;
+            }
+            ol, ul {
+                padding-left: 1em;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="{% url 'home' %}">Home</a>
+        <h3>Bow Damage Calculator</h3>
+        <h4>
+            <a href="{% url 'bow-damage-contribute' %}">Contribute</a> |
+            <a href="{% url 'bow-damage-summary' %}">Model Details</a> |
+            <a href="{% url 'bow-damage-download' %}">Download Raw Data</a>
+        </h4>
+        <form action="{% url 'bow-damage-prediction' %}" method="POST">
+            {% csrf_token %}
+            <p>
+                {{ form.bow_type.label_tag }}
+                {{ form.bow_type }}
+            </p>
+            <p>
+                {{ form.range.label_tag }}
+                {{ form.range }}
+            </p>
+            <input type="submit" value="Submit" />
+            {{ form.non_field_errors }}
+        </form>
+    </body>
+</html>

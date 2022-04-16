@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        <title>MO2 Bow Damage Data Collection</title>
+        <style>
+            .helptext {
+                font-size: 0.9em;
+                color: #444;
+            }
+            label, input {
+                display: flex;
+                flex-direction: column;
+            }
+            ol, ul {
+                padding-left: 1em;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="{% url 'home' %}">Home</a>
+        <h3>Bow Damage Data</h3>
+        <h4>
+            <a href="{% url 'bow-damage-prediction' %}">Calculator</a> |
+            <a href="{% url 'bow-damage-summary' %}">Model Details</a> |
+            <a href="{% url 'bow-damage-download' %}">Download Raw Data</a>
+        </h4>
+        <ol>
+            <li>
+                Make sure your Archery skill is 100.
+            </li>
+            <li>
+                Input your bow's type, current durability, max durability, and
+                range below.
+            </li>
+            <li>
+                Find a target dummy in town and stand about 1 horse length
+                away (exact distance does not seem to matter).
+            </li>
+            <li>
+                Shoot <strong>10 fully-charged arrows into the head</strong>
+                of the target dummy.
+                <ul>
+                    <li>
+                        Use broadhead arrows for short and asymmetric bows.
+                    </li>
+                    <li>
+                        Use longbow arrows for longbows.
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Enter the damage numbers from your combat log, just one number
+                per line.
+            </li>
+        </ol>
+        <form action="{% url 'bow-damage-contribute' %}" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit" />
+            <script>
+                // quick hack for easier mobile entry w/o bothering w/ Django
+                //  form widget abstraction
+                document.getElementById(
+                    "id_damage_log"
+                ).setAttribute(
+                    "inputmode", "numeric"
+                )
+            </script>
+        </form>
+    </body>
+</html>

@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+changed_files=$(git diff --diff-filter=d --cached --name-only)
+docker-compose -f dev/docker-compose.yml run --rm \
+--entrypoint="bash -c 'isort mo2info && black mo2info  && flake8 mo2info && mypy mo2info'" \
+api
+git add $(echo "$changed_files" | paste -s -d " " -)

@@ -1,0 +1,9 @@
+Django~=4.0
+django-extensions
+psycopg2~=2.9
+gunicorn~=20.1
+pandas
+statsmodels
+ipython
+numpy
+pymemcache
