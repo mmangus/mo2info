@@ -55,7 +55,8 @@ deployed via command line by the project owner).
 - [ ] **Improved development environment**: You can clone this repo and simply
 `cd dev && docker-compose up` to bring up a Docker dev environment, but it 
 currently takes some hand-holding to get your local DB into shape, create migrations,
-etc.
+etc. It could also be re-worked to cache dependencies to a `.venv` volume to make
+builds much faster.
 - [ ] **Broaden scope**: Bow damage calculation is just one of many subsystems in
 the game that could be modeled. Design more experiments and increase the number
 of calculators available. (This will probably be the bulk of work on this project
