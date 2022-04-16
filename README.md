@@ -2,7 +2,7 @@
 Many of the systems in [Mortal Online 2](https://www.mortalonline2.com/)
 are undocumented, leaving players to experiment and discover on their own.
 The goal of this project is to facilitate data-driven analysis of the game,
-producting online calculators that update their predictions automatically as
+producing online calculators that update their predictions automatically as
 new data comes in.
 
 ## Overview
