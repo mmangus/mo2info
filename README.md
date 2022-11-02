@@ -1,7 +1,7 @@
 # [mo2.info](https://app.mo2.info)
 Many of the systems in [Mortal Online 2](https://www.mortalonline2.com/)
 are undocumented, leaving players to experiment and discover on their own.
-The goal of [mo2.info](https://app.mo2.info) is to facilitate data-driven 
+The goal of this project is to facilitate data-driven 
 analysis of the game, producing online calculators that update their 
 predictions automatically as new data comes in.
 
@@ -34,7 +34,7 @@ two different `BowDamagePredictor` instances: one for longbows (which use longbo
 and another for short and asymmetric bows (which use broadhead arrows).
 
 Once these predictors are defined and fit to the empirical data, they can be used
-to [calculate bow damage from range](https://app.mo2.info/bow-damage/).
+to calculate bow damage from range.
 
 The predictive model is fit using the `statsmodels.formula` API for OLS regression
 and cached to minimize repeated calculations. Whenever a new `BowDamageTrial` is 
